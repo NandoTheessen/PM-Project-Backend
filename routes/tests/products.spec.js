@@ -9,7 +9,7 @@ const {
   newProd
 } = require('../../controller/index');
 
-describe('--- Controller: Products:', () => {
+describe('Controller - Products:', () => {
 
   /* Mocking Boilerplate */
   // Variables for mocking insertion
