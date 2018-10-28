@@ -1,4 +1,8 @@
 const knex = require('knex');
 const knexConfig = require('../knexfile');
 
-module.exports = knex(knexConfig.development);
+// Change config file based on environment
+// default to 'development' if no .env
+const environment = process.env.ENVIRONMENT || 'development';
+
+module.exports = knex(knexConfig[environment]);

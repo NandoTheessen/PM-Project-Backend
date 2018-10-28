@@ -1,16 +1,19 @@
+// Dependencies/Imports
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-require('dotenv').config();
 const routes = require('./routes');
 
-
+// Server Instantiation
 const server = express();
 
+// MiddleWare Queue
 server.use(express.json());
 server.use(cors());
 server.use(helmet());
 
+// Routes
 server.use('/api', routes);
 
 function errorHandler(err, req, res, next) {
