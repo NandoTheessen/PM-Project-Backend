@@ -5,7 +5,7 @@ module.exports = {
         return db('products').insert({name: name, description: description, price: price});
     },
 
-    getProds(){
+    getProds() {
         return db('products');
     }
 }
