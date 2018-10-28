@@ -20,7 +20,8 @@ describe('Model - Products:', () => {
     // Use test DB instead of dev
     const test_db = knex(knexConfig.test);
     // Migrate to our test DB in memory
-    await test_db.migrate.latest();
+    await test_db.migrate.latest()
+      .catch((err) => { throw err; });
     // Mock db call in file
     db.mockImplementation((table) => {
       return test_db(table);
@@ -36,7 +37,8 @@ describe('Model - Products:', () => {
 
   it('Returns empty array when DB is empty.', async () => {
     // Act
-    const result = await getProds();
+    const result = await getProds()
+      .catch((err) => { throw err; });
     // Assert
     expect(result).toEqual([]);
   });
@@ -48,7 +50,8 @@ describe('Model - Products:', () => {
     const description = "I love tests!";
     const price = 3.50;
     // Act
-    const postResult = await newProd(name, description, price);
+    const postResult = await newProd(name, description, price)
+      .catch((err) => { throw err; });
     // Assert
     expect(postResult).toEqual([ 1 ]);
     // --- Retrieve Record

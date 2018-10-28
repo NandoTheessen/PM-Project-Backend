@@ -88,7 +88,8 @@ describe('Controller - Products:', () => {
 
   it('getAll sends proper response when DB is empty.', async () => {
     // Act
-    await products.getAll(request, response, next);
+    await products.getAll(request, response, next)
+      .catch((err) => { throw err; });
     // Assert
     const { statusCalledWith, jsonCalledWith } = response;
     expect(error).toBeNull();
@@ -104,7 +105,8 @@ describe('Controller - Products:', () => {
       "price": "42.00"
     };
     // Act
-    await products.post(request, response, next);
+    await products.post(request, response, next)
+      .catch((err) => { throw err; });
     // Assert
     const { statusCalledWith, jsonCalledWith } = response;
     expect(error).toBeNull();
@@ -120,9 +122,11 @@ describe('Controller - Products:', () => {
       price: "42.00"
     };
     const { name, description, price } = newObj;
-    await newProd(name, description, price);
+    await newProd(name, description, price)
+      .catch((err) => { throw err; });
     // Act
-    await products.getAll(request, response, next);
+    await products.getAll(request, response, next)
+      .catch((err) => { throw err; });
     // Assert
     const { statusCalledWith, jsonCalledWith } = response;
     expect(error).toBeNull();
