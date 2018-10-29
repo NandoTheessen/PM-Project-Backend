@@ -6,7 +6,10 @@ jest.mock('../../controller/index');
 
 const {
   getProds,
-  newProd
+  newProd,
+  getOneProd,
+  putOneProd,
+  delOneProd,
 } = require('../../controller/index');
 
 describe('Controller - Products:', () => {
@@ -43,12 +46,17 @@ describe('Controller - Products:', () => {
 
       return Promise.resolve([newObject.id]);
     });
+
+    getOneProd.mockImplementation((id) => {
+      return Promise.resolve(fakeDb.filter((elem) => elem.id === id));
+    });
   });
 
   beforeEach(() => {
     // Below are mocks for mocking req and res objects
     // They'll be reset before every test
     request = {
+      params: {},
       body: {},
     };
 
@@ -140,4 +148,28 @@ describe('Controller - Products:', () => {
     );
   });
 
+  it('getOne...gets one and sends proper response.', async () => {
+    // Arrange
+    newObj = {
+      name: "test_product",
+      description: "a test product insertion",
+      price: "42.00"
+    };
+    const [ id ] = await newProd(...Object.values(newObj))
+      .catch((err) => { throw err; });
+    newObj.id = id;
+    // Act
+    request.params.id = id;
+    await products.getOne(request, response, next)
+      .catch((err) => { throw err; });
+    // Assert
+    const { statusCalledWith, jsonCalledWith } = response;
+    expect(error).toBeNull();
+    expect(statusCalledWith).toBe(status.ok);
+    expect(jsonCalledWith).toEqual([ newObj ]);
+  });
+
+  it('putOne', async () => {
+
+  });
 });
