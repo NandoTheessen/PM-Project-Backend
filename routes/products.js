@@ -43,8 +43,17 @@ const getOne = async function getSingleProduct(req, res, next) {
 const putOne = async function editSingleProduct(req, res, next) {
     const { id } = req.params;
     const { name, description, price } = req.body;
-    try {
 
+    try {
+        const count = await putOneProd(id, name, description, price);
+
+        if (count) {
+            res.status(status.noContent);
+        }
+        else {
+            err = { statusCode: status.notFound }
+            next(err);
+        }
     }
     catch (err) {
         next(err);
@@ -55,7 +64,15 @@ const delOne = async function deleteSingleProduct(req, res, next) {
     const { id } = req.params;
 
     try {
+        const count = await delOneProd(id);
 
+        if (count) {
+            res.status(status.noContent);
+        }
+        else {
+            err = { statusCode: status.notFound }
+            next(err);
+        }
     }
     catch (err) {
         next(err);

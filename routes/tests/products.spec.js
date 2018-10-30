@@ -41,14 +41,22 @@ describe('Controller - Products:', () => {
         description,
         price
       };
-
       fakeDb.push(newObject);
-
       return Promise.resolve([newObject.id]);
     });
 
     getOneProd.mockImplementation((id) => {
       return Promise.resolve(fakeDb.filter((elem) => elem.id === id));
+    });
+
+    putOneProd.mockImplementation((id, name, description, price) => {
+      const count = fakeDb.reduce((acc, elem) => elem.id === id ? ++acc : acc, 0);
+      return count;
+    });
+
+    delOneProd.mockImplementation((id) => {
+      const count = fakeDb.reduce((acc, elem) => elem.id === id ? ++acc : acc, 0);
+      return count;
     });
   });
 
@@ -151,15 +159,14 @@ describe('Controller - Products:', () => {
   it('getOne...gets one and sends proper response.', async () => {
     // Arrange
     newObj = {
+      id: 1,
       name: "test_product",
       description: "a test product insertion",
       price: "42.00"
     };
-    const [ id ] = await newProd(...Object.values(newObj))
-      .catch((err) => { throw err; });
-    newObj.id = id;
+    fakeDb = [ newObj ];
     // Act
-    request.params.id = id;
+    request.params.id = newObj.id;
     await products.getOne(request, response, next)
       .catch((err) => { throw err; });
     // Assert
@@ -169,7 +176,58 @@ describe('Controller - Products:', () => {
     expect(jsonCalledWith).toEqual([ newObj ]);
   });
 
-  it('putOne', async () => {
+  it('putOne has 204 response upon success', async () => {
+    // Arrange
+    fakeDb = [ { id: 1 } ];
+    // Act
+    request.params.id = 1;
+    await products.putOne(request, response, next)
+      .catch((err) => { throw err; });
+    // Assert
+    const { statusCalledWith } = response;
+    expect(error).toBeNull();
+    expect(statusCalledWith).toBe(status.noContent);
+  });
 
+  it('putOne returns 404 when not found.', async () => {
+    // Act
+    request.params.id = 42;
+    await products.putOne(request, response, next)
+      .catch((err) => { throw err; });
+    // Assert
+    const { statusCalledWith } = response;
+    expect(error).toEqual({ statusCode: 404 });
+    expect(statusCalledWith).toBeFalsy();
+  });
+
+  it('delOne returns appropriate response.', async () => {
+    // Arrange
+    newObj = {
+      name: "test_product",
+      description: "a test product insertion",
+      price: "42.00"
+    };
+    const [ id ] = await newProd(...Object.values(newObj))
+      .catch((err) => { throw err; });
+    newObj.id = id;
+    // Act
+    request.params.id = id;
+    await products.delOne(request, response, next)
+      .catch((err) => { throw err; });
+    // Assert
+    const { statusCalledWith } = response;
+    expect(error).toBeNull();
+    expect(statusCalledWith).toBe(status.noContent);
+  });
+
+  it('delOne returns 404 when not found.', async () => {
+    // Act
+    request.params.id = 42;
+    await products.delOne(request, response, next)
+      .catch((err) => { throw err; });
+    // Assert
+    const { statusCalledWith } = response;
+    expect(error).toEqual({ statusCode: 404 });
+    expect(statusCalledWith).toBeFalsy();
   });
 });

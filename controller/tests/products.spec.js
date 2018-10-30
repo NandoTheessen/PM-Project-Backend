@@ -109,12 +109,8 @@ describe('Model - Products:', () => {
       throw err;
     }
     // Assert
-    expect(result1).toEqual(
-      expect.arrayContaining([expect.objectContaining(records[0])])
-    );
-    expect(result2).toEqual(
-      expect.arrayContaining([expect.objectContaining(records[2])])
-    );
+    expect(result1).toEqual([expect.objectContaining(records[0])]);  
+    expect(result2).toEqual([expect.objectContaining(records[2])]);
     expect(result3).toEqual([]);
   });
 
