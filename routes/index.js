@@ -1,5 +1,4 @@
 const express = require('express');
-
 // Importing Controller Functions
 const products = require('./products');
 const customers = require('./customers')
@@ -12,13 +11,13 @@ const notImplemented = function throwErrorForUnfinishedEndpoints(req, res, next)
 const router = express.Router();
 
 // Endpoints
-router.use('/customers', customers)
+// router.use('/customers', customers)
 
-// router.route('/customers/register')
-//     .get(customers.googleStart);
+router.route('/customers/register')
+    .get(customers.googleStart);
 
-// router.route('/customers/redirect')
-//     .get(customers.googleRedirect);
+router.route('/customers/redirect')
+    .get(customers.googleAuth, customers.googleRedirect);
 
 router.use('/customers/login', notImplemented);
 

@@ -1,6 +1,10 @@
 const passport = require('passport');
 const passportGoogle = require('passport-google-oauth');
 const db = require('../data/dbConfig')
+const { 
+    findUser,
+    makeUser
+} = require('../controller/index')
 
 const { GOOGLE_ID, GOOGLE_SECRET} = process.env;
 const passportConfig = {
@@ -10,34 +14,21 @@ const passportConfig = {
 };
 
 
-passport.use(new passportGoogle.OAuth2Strategy(passportConfig, function (request, accessToken, refreshToken, profile, done) {
-    // console.log('request, accessToken, refreshToken, profile,',request, accessToken, refreshToken, profile)
-    console.log('something')
-    db('users')
-        .where({ externalID: profile.id})
-        .first()
-        .then(user => {
-            console.log('inside google.js', user)
-            if(!user){
-                let newUser = {
-                    username: profile.displayName,
-                    externalID: profile.id,
-                }
-                db('users')
-                    // this is a bug when using sqlite. in theory this should when moving to postgre
-                    .returning(['id', 'username', 'created_at', 'externalID', 'admin'])
-                    .insert(newUser)
-                    .then(ids => {
-                        returnedUser = ids[0];
-                        // console.log('new User', returnedUser);
-                        return done(null, returnedUser);
-                    })
-                    .catch(err => console.log('newUser error', err));
-            
-            }else {
-                return done(null, user);
-            }
-        }).catch(err => console.log('second new user', err))
-
-    
+passport.use(new passportGoogle.OAuth2Strategy(passportConfig, async function (request, accessToken, refreshToken, profile, done) {
+    console.log(profile)
+    try {
+        const { id, displayName } = profile;
+        // need to consider changing db to hold all emails
+        const email = profile.emails[0].value;
+        const searchUser = await findUser(id);
+        console.log('searchUser', searchUser)
+        if(!searchUser){
+            const createUser = await makeUser(id, displayName, email);
+            return done(null, createUser);
+        } else{
+            return done(null, searchUser);
+        }
+    } catch(err) {
+        console.log('GoogleAuth Error', err);
+    };
 }));
