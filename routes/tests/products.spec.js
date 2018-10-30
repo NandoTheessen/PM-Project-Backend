@@ -6,7 +6,10 @@ jest.mock('../../controller/index');
 
 const {
   getProds,
-  newProd
+  newProd,
+  getOneProd,
+  putOneProd,
+  delOneProd,
 } = require('../../controller/index');
 
 describe('Controller - Products:', () => {
@@ -38,10 +41,22 @@ describe('Controller - Products:', () => {
         description,
         price
       };
-
       fakeDb.push(newObject);
-
       return Promise.resolve([newObject.id]);
+    });
+
+    getOneProd.mockImplementation((id) => {
+      return Promise.resolve(fakeDb.filter((elem) => elem.id === id));
+    });
+
+    putOneProd.mockImplementation((id, name, description, price) => {
+      const count = fakeDb.reduce((acc, elem) => elem.id === id ? ++acc : acc, 0);
+      return count;
+    });
+
+    delOneProd.mockImplementation((id) => {
+      const count = fakeDb.reduce((acc, elem) => elem.id === id ? ++acc : acc, 0);
+      return count;
     });
   });
 
@@ -49,6 +64,7 @@ describe('Controller - Products:', () => {
     // Below are mocks for mocking req and res objects
     // They'll be reset before every test
     request = {
+      params: {},
       body: {},
     };
 
@@ -102,7 +118,7 @@ describe('Controller - Products:', () => {
     request.body = {
       "name": "test_product",
       "description": "a test product insertion",
-      "price": "42.00"
+      "price": 42.00
     };
     // Act
     await products.post(request, response, next)
@@ -121,9 +137,7 @@ describe('Controller - Products:', () => {
       description: "a test product insertion",
       price: "42.00"
     };
-    const { name, description, price } = newObj;
-    await newProd(name, description, price)
-      .catch((err) => { throw err; });
+    fakeDb = [ newObj ];
     // Act
     await products.getAll(request, response, next)
       .catch((err) => { throw err; });
@@ -131,13 +145,85 @@ describe('Controller - Products:', () => {
     const { statusCalledWith, jsonCalledWith } = response;
     expect(error).toBeNull();
     expect(statusCalledWith).toBe(status.ok);
-      // The below seems a little crazy, but we're just checking 
-      // that the output passed to json is:
-      // * an array
-      // * contains an object which has key/values identical to newObj
-    expect(jsonCalledWith).toEqual(
-      expect.arrayContaining([expect.objectContaining(newObj)])
-    );
+    expect(jsonCalledWith).toEqual([expect.objectContaining(newObj)]);
   });
 
+  it('getOne...gets one and sends proper response.', async () => {
+    // Arrange
+    newObj = {
+      id: 1,
+      name: "test_product",
+      description: "a test product insertion",
+      price: 42.00
+    };
+    fakeDb = [ newObj ];
+    // Act
+    request.params.id = newObj.id;
+    request.body = newObj;
+    await products.getOne(request, response, next)
+      .catch((err) => { throw err; });
+    // Assert
+    const { statusCalledWith, jsonCalledWith } = response;
+    expect(error).toBeNull();
+    expect(statusCalledWith).toBe(status.ok);
+    expect(jsonCalledWith).toEqual([ newObj ]);
+  });
+
+  it('putOne has 204 response upon success', async () => {
+    // Arrange
+    fakeDb = [ { id: 1 } ];
+    // Act
+    request.params.id = 1;
+    request.body = {
+      name: "test_product",
+      description: "a test product insertion",
+      price: 42.00
+    };
+    await products.putOne(request, response, next)
+      .catch((err) => { throw err; });
+    // Assert
+    const { statusCalledWith } = response;
+    expect(error).toBeNull();
+    expect(statusCalledWith).toBe(status.noContent);
+  });
+
+  it('putOne returns 404 when not found.', async () => {
+    // Act
+    request.params.id = 42;
+    request.body = {
+      name: "test_product",
+      description: "a test product insertion",
+      price: 42.00
+    };
+    await products.putOne(request, response, next)
+      .catch((err) => { throw err; });
+    // Assert
+    const { statusCalledWith } = response;
+    expect(error).toEqual({ statusCode: 404 });
+    expect(statusCalledWith).toBeFalsy();
+  });
+
+  it('delOne returns appropriate response.', async () => {
+    // Arrange
+    fakeDb = [ { id: 1 } ]
+    // Act
+    request.params.id = 1;
+    await products.delOne(request, response, next)
+      .catch((err) => { throw err; });
+    // Assert
+    const { statusCalledWith } = response;
+    expect(error).toBeNull();
+    expect(statusCalledWith).toBe(status.noContent);
+  });
+
+  it('delOne returns 404 when not found.', async () => {
+    // Act
+    request.params.id = 42;
+    await products.delOne(request, response, next)
+      .catch((err) => { throw err; });
+    // Assert
+    const { statusCalledWith } = response;
+    expect(error).toEqual({ statusCode: 404 });
+    expect(statusCalledWith).toBeFalsy();
+  });
 });
