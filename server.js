@@ -4,6 +4,10 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const routes = require('./routes');
+const passport = require('passport')
+require('dotenv').config();
+require('./auth/jwt')
+require('./auth/google')
 
 // Server Instantiation
 const server = express();
@@ -12,6 +16,7 @@ const server = express();
 server.use(express.json());
 server.use(cors());
 server.use(helmet());
+server.use(passport.initialize());
 
 // Routes
 server.use('/api', routes);
