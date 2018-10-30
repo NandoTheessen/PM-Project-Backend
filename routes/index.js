@@ -1,7 +1,8 @@
 const express = require('express');
 // Importing Controller Functions
 const products = require('./products');
-const customers = require('./customers')
+const customers = require('./customers');
+const passport = require('passport');
 
 const notImplemented = function throwErrorForUnfinishedEndpoints(req, res, next) {
     next(new Error('not implemented'));
@@ -11,7 +12,11 @@ const notImplemented = function throwErrorForUnfinishedEndpoints(req, res, next)
 const router = express.Router();
 
 // Endpoints
-// router.use('/customers', customers)
+router.get('/secure',
+    passport.authenticate(['jwt'], { session: false }),
+    (req, res) => {
+        res.send(req.user);
+    });
 
 router.route('/customers/register')
     .get(customers.googleStart);

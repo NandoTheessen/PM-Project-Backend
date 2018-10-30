@@ -14,7 +14,7 @@ const secret = process.env.JWT_SECRET;
             // admin: user.admin
         };
         const options = {
-            expiresIn: '5m'
+            expiresIn: '10d'
         };
         return jwt.sign(payload, secret, options)
     }
