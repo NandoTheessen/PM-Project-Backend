@@ -1,4 +1,7 @@
 const status = require('../utils/httpStatus');
+
+const { validateProduct } = require('./validators');
+
 const {
     getProds,
     newProd,
@@ -20,7 +23,7 @@ const getAll = async function getAllProducts(req, res, next) {
 
 const post = async function postSingleProduct(req, res, next) {
     try {
-        const { name, description, price } = req.body;
+        const { name, description, price } = validateProduct(req.body);
         const newProductId = await newProd(name, description, price);
         res.status(status.created).json({ productID: newProductId[0] });
     } catch (err) {
@@ -42,11 +45,10 @@ const getOne = async function getSingleProduct(req, res, next) {
 
 const putOne = async function editSingleProduct(req, res, next) {
     const { id } = req.params;
-    const { name, description, price } = req.body;
+    const { name, description, price } = validateProduct(req.body);
 
     try {
         const count = await putOneProd(id, name, description, price);
-
         if (count) {
             res.status(status.noContent);
         }
