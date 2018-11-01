@@ -1,5 +1,5 @@
 const status = require('../utils/httpStatus');
-const {
+const{
     getProds,
     newProd
 } = require('../controller/index');
