@@ -11,6 +11,21 @@ module.exports = {
     // },
     allOrders(){
         return db('order');
-    }
+    },
 
+    newOrder(origination_date, estimated_date, externalID, startStatus){
+        return db('order')
+            // i think this is needed to return id on postgre
+            .returning('id')
+            .insert({
+                origination_date: origination_date,
+                estimated_date: estimated_date,
+                cust_id: externalID,
+                progress: startStatus});
+    },
+    
+    addProdsToOrder(prod_order){
+        return db('prod_order')
+            .insert(prod_order)
+    }
 }

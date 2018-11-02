@@ -39,7 +39,7 @@ router.route('/customers/email/')
 
 router.route('/orders')
     .get(tokenCheck, orders.getAll)
-    .post(notImplemented);
+    .post(tokenCheck, orders.post);
 
 router.route('/orders/:id')
     .get(notImplemented)
