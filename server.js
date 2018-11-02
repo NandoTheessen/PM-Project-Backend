@@ -4,6 +4,10 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const routes = require('./routes');
+const passport = require('passport')
+require('dotenv').config();
+require('./auth/jwt')
+require('./auth/google')
 
 // Server Instantiation
 const server = express();
@@ -12,25 +16,31 @@ const server = express();
 server.use(express.json());
 server.use(cors());
 server.use(helmet());
+server.use(passport.initialize());
 
 // Routes
 server.use('/api', routes);
 
 function errorHandler(err, req, res, next) {
-    console.log(err);
+    console.log("error handler", err);
     switch (err.statusCode) {
-      case 404:
-        res.status(404).json({
-          message: 'The requested information could not be found'
-        });
-        break;
-      default:
-        res.status(500).json({
-          message: 'There was an error performing the specified operation'
-        });
-        break;
+        case 404:
+            res.status(404).json({
+                message: 'The requested information could not be found'
+            });
+            break;
+        case 400:
+            res.status(400).json({
+                message: 'The server cannot or will not process the request due to an apparent client error'
+            });
+            break;
+        default:
+            res.status(500).json({
+                message: 'There was an error performing the specified operation'
+            });
+            break;
     }
-  }
+}
 
 server.use(errorHandler);
 
