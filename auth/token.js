@@ -10,8 +10,9 @@ const secret = process.env.JWT_SECRET;
             username: user.username,
             externalID: user.externalID,
         };
+        // change this to < 24 hours before deploy
         const options = {
-            expiresIn: '1h'
+            expiresIn: '30d'
         };
         return jwt.sign(payload, secret, options)
     }
