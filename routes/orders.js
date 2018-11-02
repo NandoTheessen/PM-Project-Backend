@@ -2,13 +2,38 @@ const status = require('../utils/httpStatus');
 const { 
     allOrders,
     newOrder,
-    addProdsToOrder
+    addProdsToOrder,
+    oneOrder
 } = require('../controller/index');
 
+// this post will return arrey or objects that look like below
+// {
+//     "total": 102.1,
+//     "name": "William VanDolah",
+//     "origination_date": "2028-11-02",
+//     "estimated_date": "2029-11-02",
+//     "completion_date": null,
+//     "progress": "New",
+//     "order_id": 16
+// }
 const getAll = async function getAllOrders(req, res, next) {
     try{
         const orders = await allOrders();
-        res.status(status.ok).json(orders);
+        const roundedOrders = orders.map(order => {
+            order.total = Math.round(order.total * 100) / 100
+            return order;
+        })
+        res.status(status.ok).json(roundedOrders);
+    } catch(err){
+        next(err);
+    }
+}
+
+const getOne = async function getOneOrder(req, res, next) {
+    try{
+        const { id } = req.params;
+        const orderDetail = await oneOrder(id)
+        res.status(status.ok).json(orderDetail);
     } catch(err){
         next(err);
     }
@@ -28,9 +53,12 @@ const post = async function postOrder(req, res, next) {
     } catch(err){
         next(err);
     }
+
+
 }
 
 module.exports = {
     getAll,
-    post
+    post,
+    getOne
 };

@@ -1,16 +1,52 @@
 const db = require('../data/dbConfig');
 
 module.exports = {
-    // findUser(id) {
-    //     return db('customer')
-    //         .select(["customer.externalID", "customer.name", "customer.address", 
-    //             "customer.phone", "customer.created_at", "customer_email.email"])
-    //         .where({ externalID: id })
-    //         .leftJoin('customer_email', {'customer.externalID': 'customer_email.cust_id'})
-    //         .first();
-    // },
     allOrders(){
-        return db('order');
+        return db('order')
+            .leftJoin('prod_order', {'order.id': 'prod_order.order_id'})
+            .leftJoin('products', {'prod_order.prod_id': 'products.id'})
+            .leftJoin('customer', {'order.cust_id': 'customer.externalID'})
+            .groupBy('prod_order.order_id')
+            .sum('products.price as total')
+            .select(
+                'customer.name',
+                'order.origination_date',
+                'order.estimated_date',
+                'order.completion_date',
+                'order.progress',
+                'prod_order.order_id')
+    },
+
+    async oneOrder(orderId){
+        try{
+            const order = await db('order')
+                .where('order.id', orderId)
+                .leftJoin('prod_order', {'order.id': 'prod_order.order_id'})
+                .leftJoin('products', {'prod_order.prod_id': 'products.id'})
+                .leftJoin('customer', {'order.cust_id': 'customer.externalID'})
+                .sum('products.price as total')
+                .select(
+                    'customer.name',
+                    'order.origination_date',
+                    'order.estimated_date',
+                    'order.completion_date',
+                    'order.progress',
+                    'prod_order.order_id')
+                .first();
+            const prods = await db('products')
+                .where('prod_order.order_id', orderId)
+                .leftJoin('prod_order', {'products.id': 'prod_order.prod_id'})
+                .select(
+                    'products.id',
+                    'products.name',
+                    'products.price');
+                order.products = prods;
+                order.total = Math.round(order.total * 100) / 100
+            return order
+        } catch(err) {
+            console.log('orders error', err)
+        }
+
     },
 
     newOrder(origination_date, estimated_date, externalID, startStatus){
