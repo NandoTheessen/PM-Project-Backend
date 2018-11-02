@@ -3,7 +3,8 @@ const {
     allOrders,
     newOrder,
     addProdsToOrder,
-    oneOrder
+    oneOrder,
+    updateOrder
 } = require('../controller/index');
 
 // this post will return arrey or objects that look like below
@@ -53,12 +54,24 @@ const post = async function postOrder(req, res, next) {
     } catch(err){
         next(err);
     }
+}
 
-
+const put = async function putOrder(req, res, next) {
+    try{
+        const { id } = req.params;
+        const { estimated_date, completion_date, progress } = req.body;
+        const toUpdate = { estimated_date, completion_date, progress };
+        const update = await updateOrder(id, toUpdate);
+        res.status(status.ok).json(update)
+    } catch(err){
+        err['statusCode'] = 400;
+        next(err)
+    }
 }
 
 module.exports = {
     getAll,
     post,
-    getOne
+    getOne,
+    put
 };

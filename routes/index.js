@@ -43,7 +43,7 @@ router.route('/orders')
 
 router.route('/orders/:id')
     .get(tokenCheck, orders.getOne)
-    .put(notImplemented)
+    .put(tokenCheck, orders.put)
     .delete(notImplemented);
 
 router.route('/products')

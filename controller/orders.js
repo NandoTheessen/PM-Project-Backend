@@ -59,6 +59,12 @@ module.exports = {
                 cust_id: externalID,
                 progress: startStatus});
     },
+
+    updateOrder(id, update){
+        return db('order')
+            .where({ id: id })
+            .update(update);
+    },
     
     addProdsToOrder(prod_order){
         return db('prod_order')
