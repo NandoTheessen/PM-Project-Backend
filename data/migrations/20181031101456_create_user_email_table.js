@@ -1,10 +1,10 @@
 
 exports.up = (knex, Promise) => {
   return knex.schema.createTable('customer_email', (table) => {
+      table.increments();
       table.string('email').unique().notNullable();
-      table.integer('cust_id').unsigned();
-      table.foreign('cust_id').references('customer.id');
-      table.primary(['email', 'cust_id']);
+      table.string('cust_id').unsigned();
+      table.foreign('cust_id').references('customer.externalID');
   });
 };
 

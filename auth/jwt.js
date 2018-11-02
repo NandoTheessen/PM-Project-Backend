@@ -11,13 +11,17 @@ const jwtOptions = {
     secretOrKey: JWT_SECRET,
 };
 
+// this will be used to check a token on protected routes `passport.authenticate(['jwt'], { session: false })`
 passport.use(new passportJwt.Strategy(jwtOptions, async (payload, done) => {
-    // it is not checking the expired token time
-    const searchUser = await findUser(payload.externalID);
-    if(searchUser){
-        return done(null, searchUser, payload);
-    } else{
-        return done();
+    try{
+        const searchUser = await findUser(payload.externalID);
+        if(searchUser){
+            return done(null, searchUser, payload);
+        } else{
+            return done();
+        }
+    }catch(err){
+        console.log('jwt error', err)
     }
 
 }));
