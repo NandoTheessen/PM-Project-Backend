@@ -1,11 +1,7 @@
 const passport = require('passport');
 const passportGoogle = require('passport-google-oauth');
 const db = require('../data/dbConfig')
-const { 
-    findUser,
-    makeUser,
-    addEmail
-} = require('../controller/index')
+const users = require('../controller/index')
 
 const { GOOGLE_ID, GOOGLE_SECRET} = process.env;
 const passportConfig = {
@@ -17,19 +13,21 @@ const passportConfig = {
 
 passport.use(new passportGoogle.OAuth2Strategy(passportConfig, async function (request, accessToken, refreshToken, profile, done) {
     try {
-        // the profile contains information being sent from google about the user.
         const { id, displayName } = profile;
         const emails = profile.emails.map(email => {
-            return {cust_id: id, email: email.value}
+            let idPropName = request.admin ? 'admin_id' : 'cust_id';
+            return { [idPropName]: id, email: email.value}
         });
+        const group = request.admin ? 'admins' : 'customers';
+        // the profile contains information being sent from google about the user.
         console.log('emails', emails)
         // we check if this google user has logged in before
         // if they have we send that info, if not we create a new user using info from google
-        const searchUser = await findUser(id);
+        const searchUser = await users[group].findUser(id);
         if(!searchUser){
             try{
-                const createUser = await makeUser(id, displayName);
-                await addEmail(emails)
+                const createUser = await users[group].makeUser(id, displayName);
+                await users[group].addEmail(emails)
                 return done(null, createUser);
             } catch(err){
                 console.log("Google create user", err)

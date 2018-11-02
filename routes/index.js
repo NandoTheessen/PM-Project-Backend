@@ -2,6 +2,8 @@ const express = require('express');
 // Importing Controller Functions
 const products = require('./products');
 const customers = require('./customers');
+const auth = require('./auth');
+const admin = require('./admin');
 const passport = require('passport');
 
 
@@ -17,12 +19,19 @@ const tokenCheck = passport.authenticate(['jwt'], { session: false })
 
 // the frontend will need to place an href to this address. not an axios call
 // this will direct the browser to a login to google and auth the app
+
+router.route('/admin/register')
+    .get(auth.googleStart);
+
+router.route('/admin/redirect')
+    .get(admin.flagRequest, auth.googleAuth, auth.googleRedirect);
+
 router.route('/customers/register')
-    .get(customers.googleStart);
+    .get(auth.googleStart);
 
 // after google auths, it will redirect to this route. 
 router.route('/customers/redirect')
-    .get(customers.googleAuth, customers.googleRedirect);
+    .get(auth.googleAuth, auth.googleRedirect);
 
 router.route('/customers/')
     .get(tokenCheck, customers.getOneFromToken)
@@ -34,7 +43,6 @@ router.route('/customers/:id')
 
 router.route('/customers/email/')
     .post(tokenCheck, customers.postEmail);
-
 
 router.route('/orders')
     .get(notImplemented)

@@ -9,6 +9,7 @@ const secret = process.env.JWT_SECRET;
             sub: user.id,
             username: user.username,
             externalID: user.externalID,
+            isAdmin: user.isAdmin || false,
         };
         const options = {
             expiresIn: '1h'

@@ -10,7 +10,7 @@ const {
   getOneProd,
   putOneProd,
   delOneProd,
-} = require('../../controller/index');
+} = require('../../controller/index').products;
 
 describe('Controller - Products:', () => {
 
