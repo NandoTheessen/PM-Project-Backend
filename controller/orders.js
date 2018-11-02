@@ -65,9 +65,22 @@ module.exports = {
             .where({ id: id })
             .update(update);
     },
+
+    deleteOneOrder(id) {
+        return db('order')
+            .where({ id: id })
+            .del();
+    },
     
+    // this will take an array of product numers
     addProdsToOrder(prod_order){
         return db('prod_order')
             .insert(prod_order)
+    }, 
+
+    delAllProdFromOrder(id){
+        return db('prod_order')
+            .where(id)
+            .del()
     }
 }

@@ -44,7 +44,12 @@ router.route('/orders')
 router.route('/orders/:id')
     .get(tokenCheck, orders.getOne)
     .put(tokenCheck, orders.put)
-    .delete(notImplemented);
+    .delete(tokenCheck, orders.deleteO);
+
+// these routes are to delete or add a product to an order. expects order ID param
+router.route('/orders/products/:id')
+    .post(tokenCheck, orders.prodToOrder)
+    .delete(tokenCheck, orders.delProdOrder);
 
 router.route('/products')
     .get(products.getAll)

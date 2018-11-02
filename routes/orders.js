@@ -4,7 +4,9 @@ const {
     newOrder,
     addProdsToOrder,
     oneOrder,
-    updateOrder
+    updateOrder,
+    deleteOneOrder,
+    delAllProdFromOrder
 } = require('../controller/index');
 
 // this post will return arrey or objects that look like below
@@ -64,14 +66,59 @@ const put = async function putOrder(req, res, next) {
         const update = await updateOrder(id, toUpdate);
         res.status(status.ok).json(update)
     } catch(err){
-        err['statusCode'] = 400;
+        err['statusCode'] = status.badRequest;
         next(err)
     }
 }
+
+// should put some kind of check to keep from deleting orders that are processed
+const deleteO = async function deleteOrder(req, res, next) {
+    try{
+        const orderId = req.params.id;
+        const idForProd = { order_id: orderId }
+        const deleted = await deleteOneOrder(orderId);
+        await delAllProdFromOrder(idForProd)
+        res.status(status.ok).json(deleted)
+    } catch(err){
+        err['statusCode'] = status.notFound;
+        next(err);
+    }
+}
+
+// expects to receive an order id and an array of products
+const prodToOrder = async function postProdToOrder(req, res, next) {
+    try{
+        const { id } = req.params;
+        const { products } = req.body;
+        const prod_order = products.map(prod => {
+            return { order_id: id, prod_id: prod};
+        });
+        const posted = await addProdsToOrder(prod_order);
+        res.status(status.created).json(posted);
+    }catch(err) {
+        next(err);
+    }
+}
+
+const delProdOrder = async function delProdFromOrder(req, res, next) {
+    try{
+        const { id } = req.params;
+        const { products } = req.body;
+        const idForProd = { prod_id: products, order_id: id }
+        const deleted = await delAllProdFromOrder(idForProd);
+        res.status(status.ok).json(deleted);
+    }catch(err) {
+        next(err);
+    }
+}
+
 
 module.exports = {
     getAll,
     post,
     getOne,
-    put
+    put,
+    deleteO,
+    prodToOrder,
+    delProdOrder
 };
