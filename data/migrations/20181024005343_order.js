@@ -5,7 +5,7 @@ exports.up = (knex, Promise) => {
         table.date('estimated_date').unique().notNullable();
         table.date('completion_date');
         table.string('progress');
-        table.integer('cust_id').unsigned();
+        table.string('cust_id').unsigned();
         table.foreign('cust_id').references('customer.externalID');
     });
 };

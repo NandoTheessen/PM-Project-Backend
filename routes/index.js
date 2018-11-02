@@ -2,6 +2,7 @@ const express = require('express');
 // Importing Controller Functions
 const products = require('./products');
 const customers = require('./customers');
+const orders = require('./orders');
 const passport = require('passport');
 
 
@@ -37,7 +38,7 @@ router.route('/customers/email/')
 
 
 router.route('/orders')
-    .get(notImplemented)
+    .get(tokenCheck, orders.getAll)
     .post(notImplemented);
 
 router.route('/orders/:id')
