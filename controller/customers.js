@@ -17,6 +17,9 @@ module.exports = {
             const foundEmails = await db('customer_email')
                 .where({ cust_id: id })
             const emails = foundEmails.map(email => email.email)
+            if(!Array.isArray(foundEmails) || !foundEmails.length){
+                return foundUser
+            }
             foundUser['emails'] = emails
             return foundUser
         }catch (err){

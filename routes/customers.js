@@ -23,6 +23,7 @@ const googleAuth = passport.authenticate('google', { session: false });
 // the frontend will need to parse the address to get the token and add it to local storage
 const googleRedirect = function(req, res, next) {
     try {
+        console.log('inside redirect', req.user)
         const makeToken = token.letsMakeAToken(req.user)
         res.redirect(REACT_REDIRECT +'?token=' + makeToken)
     } catch(err){
