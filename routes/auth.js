@@ -20,7 +20,6 @@ const googleAuth = function(group = 'customers') {
 // this could be changed to any route on the front end if we want to display a custom success msg
 // the frontend will need to parse the address to get the token and add it to local storage
 const googleRedirect = function(req, res, next) {
-    console.log('googleRedirect req.admin:', req.params);
     try {
         const makeToken = token.letsMakeAToken(req.user)
         res.redirect(REACT_REDIRECT +'?token=' + makeToken)

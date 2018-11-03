@@ -4,10 +4,8 @@ const secret = process.env.JWT_SECRET;
 
  module.exports = { 
     letsMakeAToken(user){
-        console.log('inside token',user)
         const payload = {
-            sub: user.id,
-            username: user.username,
+            username: user.name,
             externalID: user.externalID,
             isAdmin: user.isAdmin || false,
         };

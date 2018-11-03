@@ -14,19 +14,25 @@ module.exports = {
             const foundAdmin = await db('admin')
                 .where({ externalID: id })
                 .first();
-            const foundEmails = await db('admin_email')
-                .where({ admin_id: id });
-            const emails = foundEmails.map(email => email.email)
-            foundAdmin['emails'] = emails;
+            if (foundAdmin) {
+                const foundEmails = await db('admin_email')
+                    .where({ admin_id: id });
+                const emails = foundEmails.map(email => email.email)
+                foundAdmin['emails'] = emails;
+            }
             return foundAdmin;
         }catch (err){
             console.log('findAdmin Error', err)
         }
     },
 
-    makeUser(id, displayName) {
-        return db('admin')
+    async makeUser(id, displayName) {
+        const result = await db('admin')
             .insert({ name: displayName, externalID: id});
+
+        if (result) {
+            return this.findUser(id);
+        }
     },
 
     putUser(id, update) {
@@ -37,7 +43,7 @@ module.exports = {
 
 // this add expects an object or array of object {email: <email>, cust_id: <externalID>}
     addEmail(email) {
-        console.log("inside admin db", email)
+        // console.log("inside admin db", email)
         return db('admin_email')
             .insert(email);
     }

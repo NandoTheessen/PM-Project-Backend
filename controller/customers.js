@@ -14,21 +14,25 @@ module.exports = {
             const foundUser = await db('customer')
                 .where({ externalID: id })
                 .first();
-            const foundEmails = await db('customer_email')
-                .where({ cust_id: id })
             if (foundUser) {
-                const emails = foundEmails.map(email => email.email)
-                foundUser['emails'] = emails
+                const foundEmails = await db('customer_email')
+                    .where({ cust_id: id });
+                const emails = foundEmails.map(email => email.email);
+                foundUser['emails'] = emails;
             }
-            return foundUser
+            return foundUser;
         }catch (err){
-            console.log('findUser Error', err)
+            console.log('findUser Error', err);
         }
     },
 
-    makeUser(id, displayName) {
-        return db('customer')
+    async makeUser(id, displayName) {
+        const result = await db('customer')
             .insert({ name: displayName, externalID: id});
+
+        if (result) {
+            return this.findUser(id);
+        }
     },
 
     putUser(id, update) {
