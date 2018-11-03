@@ -5,7 +5,7 @@ const customers = require('./customers');
 const auth = require('./auth');
 const admin = require('./admin');
 const passport = require('passport');
-
+const strategy = require('../auth/strategy');
 
 const notImplemented = function throwErrorForUnfinishedEndpoints(req, res, next) {
     next(new Error('not implemented'));
@@ -20,18 +20,18 @@ const tokenCheck = passport.authenticate(['jwt'], { session: false })
 // the frontend will need to place an href to this address. not an axios call
 // this will direct the browser to a login to google and auth the app
 
-router.route('/admin/register')
-    .get(auth.googleStart);
+router.route('/admins/register')
+    .get(auth.googleStart('admins'));
 
-router.route('/admin/redirect')
-    .get(admin.flagRequest, auth.googleAuth, auth.googleRedirect);
+router.route('/admins/redirect')
+    .get(auth.googleAuth('admins'), auth.googleRedirect);
 
 router.route('/customers/register')
-    .get(auth.googleStart);
+    .get(auth.googleStart('customers'));
 
 // after google auths, it will redirect to this route. 
 router.route('/customers/redirect')
-    .get(auth.googleAuth, auth.googleRedirect);
+    .get(auth.googleAuth('customers'), auth.googleRedirect);
 
 router.route('/customers/')
     .get(tokenCheck, customers.getOneFromToken)
@@ -58,8 +58,8 @@ router.route('/products')
     .post(products.post);
 
 router.route('/products/:id')
-    .get(notImplemented)
-    .put(notImplemented)
-    .delete(notImplemented);
+    .get(products.getOne)
+    .put(products.putOne)
+    .delete(products.delOne);
 
 module.exports = router;

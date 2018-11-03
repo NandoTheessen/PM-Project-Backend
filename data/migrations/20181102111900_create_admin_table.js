@@ -6,7 +6,7 @@ exports.up = (knex, Promise) => {
       table.string('title');
       table.text('address');
       table.string('phone', 15);
-      table.boolean('isAdmin').defaultTo(false);
+      table.boolean('isAdmin').defaultTo(true);
       table.timestamp('created_at').defaultTo(knex.fn.now());
   });
 };
