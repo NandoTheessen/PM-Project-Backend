@@ -2,6 +2,7 @@ const express = require('express');
 // Importing Controller Functions
 const products = require('./products');
 const customers = require('./customers');
+const orders = require('./orders');
 const passport = require('passport');
 
 
@@ -37,13 +38,18 @@ router.route('/customers/email/')
 
 
 router.route('/orders')
-    .get(notImplemented)
-    .post(notImplemented);
+    .get(tokenCheck, orders.getAll)
+    .post(tokenCheck, orders.post);
 
 router.route('/orders/:id')
-    .get(notImplemented)
-    .put(notImplemented)
-    .delete(notImplemented);
+    .get(tokenCheck, orders.getOne)
+    .put(tokenCheck, orders.put)
+    .delete(tokenCheck, orders.deleteO);
+
+// these routes are to delete or add a product to an order. expects order ID param
+router.route('/orders/products/:id')
+    .post(tokenCheck, orders.prodToOrder)
+    .delete(tokenCheck, orders.delProdOrder);
 
 router.route('/products')
     .get(products.getAll)

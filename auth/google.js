@@ -28,13 +28,15 @@ passport.use(new passportGoogle.OAuth2Strategy(passportConfig, async function (r
         const searchUser = await findUser(id);
         if(!searchUser){
             try{
-                const createUser = await makeUser(id, displayName);
+                await makeUser(id, displayName);
                 await addEmail(emails)
+                const createUser = await findUser(id);
                 return done(null, createUser);
             } catch(err){
                 console.log("Google create user", err)
             }
         } else{
+            console.log('search', searchUser)
             return done(null, searchUser);
         }
     } catch(err) {
