@@ -8,7 +8,7 @@ const {
     getOneProd,
     putOneProd,
     delOneProd,
-} = require('../controller/index');
+} = require('../controller/index').products;
 
 // Product Handler Functions
 

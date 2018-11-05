@@ -1,9 +1,9 @@
 const products = require('./products');
 const customers = require('./customers');
-const orders = require('./orders');
+const admins = require('./admins');
 
 module.exports = {
-    ...products,
-    ...customers,
-    ...orders
+  products,
+  customers,
+  admins
 };

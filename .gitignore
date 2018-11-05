@@ -3,5 +3,7 @@
 
 .DS_Store
 .env
+ron.env
+will.env
 
 clipboard.js
