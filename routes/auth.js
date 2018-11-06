@@ -28,8 +28,20 @@ const googleRedirect = function(req, res, next) {
     }
 };
 
+const isAdminCheck = function(req, res, next) {
+    console.log(req.authInfo.isAdmin)
+    if(req.authInfo.isAdmin === false){
+        res.status(401).json({
+            message: 'This requires you to be logged in as an admin'
+        });
+    }else{
+        next()
+    }
+}
+
 module.exports = {
   googleStart,
   googleAuth,
-  googleRedirect
+  googleRedirect,
+  isAdminCheck
 }

@@ -47,7 +47,7 @@ router.route('/customers/email/').post(tokenCheck, customers.postEmail);
 
 router
   .route('/orders')
-  .get(tokenCheck, orders.getAll)
+  .get(tokenCheck, auth.isAdminCheck ,orders.getAll)
   .post(tokenCheck, orders.post);
 
 router
