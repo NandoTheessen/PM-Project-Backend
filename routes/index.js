@@ -3,10 +3,8 @@ const express = require('express');
 const products = require('./products');
 const customers = require('./customers');
 const auth = require('./auth');
-const admin = require('./admin');
 const orders = require('./orders');
 const passport = require('passport');
-const strategy = require('../auth/strategy');
 
 const notImplemented = function throwErrorForUnfinishedEndpoints(
   req,

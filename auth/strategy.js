@@ -31,10 +31,12 @@ const strategy = (group = 'customers') => {
             // we check if this google user has logged in before
             // if they have we send that info, if not we create a new user using info from google
             const searchUser = await users[group].findUser(id);
+            console.log("searchUser", searchUser)
             if(!searchUser){
                 try{
                     const createUser = await users[group].makeUser(id, displayName);
                     await users[group].addEmail(emails);
+                    console.log("createUser", createUser)
                     return done(null, createUser);
                 } catch(err){
                     console.log("Google create user", err)

@@ -19,9 +19,9 @@ module.exports = {
         const emails = foundEmails.map(email => email.email);
         foundUser['emails'] = emails;
       }
-      return foundUser;
+        return foundUser;
     } catch (err) {
-      console.log('findUser Error', err);
+        console.log('findUser Error', err);
     }
   },
 

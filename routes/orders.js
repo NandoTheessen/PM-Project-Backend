@@ -7,7 +7,7 @@ const {
     updateOrder,
     deleteOneOrder,
     delAllProdFromOrder
-} = require('../controller/index');
+} = require('../controller/index').orders;
 
 // this post will return arrey or objects that look like below
 // {
