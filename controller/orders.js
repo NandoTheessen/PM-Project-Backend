@@ -53,8 +53,6 @@ module.exports = {
         return db('order')
             .where('order.cust_id', externalId)
             .select('id')
-
-        // return orders;
     },
 
 
