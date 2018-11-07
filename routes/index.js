@@ -3,10 +3,8 @@ const express = require('express');
 const products = require('./products');
 const customers = require('./customers');
 const auth = require('./auth');
-const admin = require('./admin');
 const orders = require('./orders');
 const passport = require('passport');
-const strategy = require('../auth/strategy');
 
 const notImplemented = function throwErrorForUnfinishedEndpoints(
   req,
@@ -42,15 +40,19 @@ router.route('/customers/').get(tokenCheck, customers.getOneFromToken);
 
 router
   .route('/customers/:id')
-  .get(tokenCheck, customers.getOneFromId)
+  .get(tokenCheck, auth.isAdminCheck, customers.getOneFromId)
   .put(tokenCheck, customers.put);
 
 router.route('/customers/email/').post(tokenCheck, customers.postEmail);
 
 router
   .route('/orders')
-  .get(tokenCheck, orders.getAll)
+  .get(tokenCheck, auth.isAdminCheck, orders.getAll)
   .post(tokenCheck, orders.post);
+
+router
+  .route('/orders/token')
+  .get(tokenCheck, orders.getAllbyToken)
 
 router
   .route('/orders/:id')
@@ -67,12 +69,12 @@ router
 router
   .route('/products')
   .get(products.getAll)
-  .post(products.post);
+  .post(tokenCheck, auth.isAdminCheck, products.post);
 
 router
   .route('/products/:id')
   .get(products.getOne)
-  .put(products.putOne)
-  .delete(products.delOne);
+  .put(tokenCheck, auth.isAdminCheck, products.putOne)
+  .delete(tokenCheck, auth.isAdminCheck, products.delOne);
 
 module.exports = router;

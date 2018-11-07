@@ -6,8 +6,9 @@ const {
     oneOrder,
     updateOrder,
     deleteOneOrder,
-    delAllProdFromOrder
-} = require('../controller/index');
+    delAllProdFromOrder,
+    allUsersOrders
+} = require('../controller/index').orders;
 
 // this post will return arrey or objects that look like below
 // {
@@ -37,6 +38,24 @@ const getOne = async function getOneOrder(req, res, next) {
         const { id } = req.params;
         const orderDetail = await oneOrder(id)
         res.status(status.ok).json(orderDetail);
+    } catch(err){
+        next(err);
+    }
+}
+
+
+const getAllbyToken = async function getTokenOrder(req, res, next) {
+    try{
+        const { externalID } = req.user;
+        
+        const orderNumbers = await allUsersOrders(externalID)
+        const orderDetails = await orderNumbers.map(id => {
+            return oneOrder(id.id)
+        })
+        Promise.all(orderDetails).then(value => {
+            res.status(status.ok).json(value);
+        });
+        // res.status(status.ok).json(results);
     } catch(err){
         next(err);
     }
@@ -120,5 +139,6 @@ module.exports = {
     put,
     deleteO,
     prodToOrder,
-    delProdOrder
+    delProdOrder,
+    getAllbyToken
 };

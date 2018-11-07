@@ -6,7 +6,6 @@ const helmet = require('helmet');
 const routes = require('./routes');
 const passport = require('passport');
 const morgan = require('morgan');
-// require('dotenv').config();
 require('./auth/jwt')
 require('./auth/strategy')
 
@@ -18,7 +17,7 @@ server.use(express.json());
 server.use(cors());
 server.use(helmet());
 server.use(passport.initialize());
-server.use(morgan('dev'));
+// server.use(morgan('dev'));
 
 // Routes
 server.use('/api', routes);

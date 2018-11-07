@@ -49,6 +49,13 @@ module.exports = {
 
     },
 
+    allUsersOrders(externalId){
+        return db('order')
+            .where('order.cust_id', externalId)
+            .select('id')
+    },
+
+
     newOrder(origination_date, estimated_date, externalID, startStatus){
         return db('order')
             // i think this is needed to return id on postgre

@@ -3,7 +3,7 @@ const passportJwt = require('passport-jwt');
 const db = require('../data/dbConfig')
 const { 
     findUser,
-} = require('../controller/index')
+} = require('../controller/index').customers;
 
 const { JWT_SECRET } = process.env;
 const jwtOptions = {

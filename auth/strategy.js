@@ -3,7 +3,7 @@ const passportGoogle = require('passport-google-oauth');
 const db = require('../data/dbConfig')
 const users = require('../controller/index');
 
-const { GOOGLE_ID, GOOGLE_SECRET, PORT} = process.env;
+const { GOOGLE_ID, GOOGLE_SECRET, ROUTE_TO_BACKEND} = process.env;
 
 // passport.use();
 
@@ -15,7 +15,7 @@ const strategy = (group = 'customers') => {
     const passportConfig = {
         clientID: GOOGLE_ID,
         clientSecret: GOOGLE_SECRET,
-        callbackURL: `http://localhost:${ PORT || 5000 }/api/${group}/redirect`,
+        callbackURL: `${ROUTE_TO_BACKEND}/api/${group}/redirect`,
         passReqToCallback: true,
     };
 

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "jest --verbose --watch"
   },
   "keywords": [],
@@ -21,6 +22,7 @@
     "passport": "^0.4.0",
     "passport-google-oauth": "^1.0.0",
     "passport-jwt": "^4.0.0",
+    "pg": "^7.6.1",
     "sqlite3": "^4.0.3"
   },
   "devDependencies": {
