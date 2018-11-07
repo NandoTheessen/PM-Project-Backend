@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>PM-Project-Backend Documentation</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet"
+    type="text/css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+    integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+    crossorigin="anonymous">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+
+</head>
+
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <div class="row">
+      <header class="twelve column">
+        <h1 style="margin-top: 30px">PM-Project-Backend</h1>
+
+        <p>This is the Documentation for the PM-Project-Backend</p>
+
+        <strong>Contents</strong>
+        <ul>
+          <li>
+            <a href="#getuser">Get User Data</a>
+          </li>
+          <li>
+            <a href="#putuser">Update User</a>
+          </li>
+          <li>
+            <a href="#addemail">Add email address to user</a>
+          </li>
+          <li>
+            <a href="#allorders">Get All Orders</a>
+          </li>
+          <li>
+            <a href="#alluserorders">Get Logged in users orders</a>
+          </li>
+          <li>
+            <a href="#deleteorder">Delete an order</a>
+          </li>
+          <li>
+            <a href="#updateorder">Update an order</a>
+          </li>
+        </ul>
+        <hr />
+      </header>
+    </div>
+
+    <h2>Usage</h2>
+    <p>All the endpoints in this API are protected with <a href="https://jwt.io"
+        target="_blank">JWT</a> except <code>GET</code> on products</p>
+
+
+    <section id="getuser" class="row">
+      <h4>Get User Data</h4>
+      <p><span>Endpoint URL: </span><code>/api/customers/</code> <span>Method:
+        </span><code>GET</code></p>
+      <p>To register a new user send a <code>POST</code> that looks as follows.</p>
+      <strong>Example Output</strong>
+      <pre><code>{
+  "externalID": "101726162587457658790",
+  "name": "Denver McDavid",
+  "address": null,
+  "phone": null,
+  "created_at": "2018-11-07T19:57:16.286Z",
+  "emails": [
+    "thedenverfund@gmail.com"
+  ]
+}</code></pre>
+
+    </section>
+    <hr>
+
+
+
+  <footer style="background-color: #eee; padding-top: 30px; margin-top: 50px;">
+    <div class="container">
+      <div class="row">
+        <div class="one-half column">
+          <ul style="list-style: none">
+            <li>
+              <a href="https://github.com/NandoTheessen/PM-Project-Backend"
+                target="_blank" style="text-decoration: none;">
+                <i class="fab fa-github"></i> <span>GitHub Repository</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="one-half column">
+          <p>This page was built using <a href="http://getskeleton.com/" target="_blank">S
+              K E L E T O N.</a></p>
+        </div>
+      </div>
+      <hr />
+      <p style="text-align: center;"><small>&copy; 2018</small></p>
+    </div>
+  </footer>
+  <!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+
+</html>
