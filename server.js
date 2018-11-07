@@ -6,7 +6,6 @@ const helmet = require('helmet');
 const routes = require('./routes');
 const passport = require('passport');
 const morgan = require('morgan');
-// require('dotenv').config();
 require('./auth/jwt')
 require('./auth/strategy')
 
