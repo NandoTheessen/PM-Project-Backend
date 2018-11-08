@@ -56,16 +56,40 @@
             <a href="#addemail">Add email address to user</a>
           </li>
           <li>
-            <a href="#allorders">Get All Orders</a>
+            <a href="#getallorders">Get All Orders</a>
           </li>
           <li>
-            <a href="#alluserorders">Get Logged in users orders</a>
+            <a href="#postneworder">Post New Orders</a>
           </li>
           <li>
-            <a href="#deleteorder">Delete an order</a>
+            <a href="#getorderbytoken">Get All Token Holders Orders</a>
           </li>
           <li>
-            <a href="#updateorder">Update an order</a>
+            <a href="#getorderbyid">Get Order by ID</a>
+          </li>
+          <li>
+            <a href="#putorderbyid">Put Order by ID</a>
+          </li>
+          <li>
+            <a href="#deleteorderbyid">Delete Order by ID</a>
+          </li>
+          <li>
+            <a href="#getallproducts">Get all Products</a>
+          </li>
+          <li>
+            <a href="#postproducts">Post Products</a>
+          </li>
+          <li>
+            <a href="#getproductsbyid">Get Product by ID</a>
+          </li>
+          <li>
+            <a href="#putproductsbyid">Put Product by ID</a>
+          </li>
+          <li>
+            <a href="#deleteproductsbyid">Delete Product by ID</a>
+          </li>
+          <li>
+            <a href="#oauth">OAuth info</a>
           </li>
         </ul>
         <hr />
@@ -98,12 +122,12 @@
 
     <section id="putuser" class="row">
       <h4>Update User profile by id</h4>
-      <p><span>Endpoint URL: </span><code>api/customers/:id</code> <span>Method:
+      <p><span>Endpoint URL: </span><code>/api/customers/:id</code> <span>Method:
         </span><code>PUT</code></p>
         <p>Only fields that are going to be updated need to be sent. Requires being
           logged in as Admin
         </p>
-        <p><span>Endpoint URL: </span><code>api/customers/</code> <span>Method:
+        <p><span>Endpoint URL: </span><code>/api/customers/</code> <span>Method:
         </span><code>PUT</code></p>
         <p>Will take user Id off token to update.  Does not require being admin</p>
       <strong>Expected Input</strong>
@@ -120,7 +144,7 @@
 
     <section id="addemail" class="row">
       <h4>Add email to User</h4>
-      <p><span>Endpoint URL: </span><code>/customers/email/</code> <span>Method:
+      <p><span>Endpoint URL: </span><code>/api/customers/email/</code> <span>Method:
         </span><code>PUT</code></p>
       <strong>Expected Input</strong>
       <p>Only fields that are going to be updated need to be sent</p>
@@ -134,6 +158,279 @@
 
     </section>
     <hr>
+
+    <section id="getallorders" class="row">
+      <h4>Get All Orders</h4>
+      <p><span>Endpoint URL: </span><code>/api/orders/</code> <span>Method:
+        </span><code>GET</code></p>
+        <p>Must be logged in as admin to get all orders</p>
+      <strong>Example Output</strong>
+      <pre><code>[
+{
+  "total": 103.15,
+  "name": "Denver Smi",
+  "origination_date": "2028-11-02",
+  "estimated_date": "2029-11-02",
+  "completion_date": null,
+  "progress": "New",
+  "order_id": 18
+},
+{
+  "total": 245.15,
+  "name": "Denver Smi",
+  "origination_date": "2028-11-02",
+  "estimated_date": "2029-11-02",
+  "completion_date": null,
+  "progress": "New",
+  "order_id": 19
+}
+    ]</code></pre>
+
+    </section>
+    <hr>
+
+    <section id="postneworder" class="row">
+      <h4>Post New Order</h4>
+      <p><span>Endpoint URL: </span><code>/api/orders/</code> <span>Method:
+        </span><code>POST</code></p>
+      <strong>Expected Input</strong>
+      <pre><code>{
+  "origination_date": "2028-11-02",
+  "estimated_date": "2029-11-02",
+  "products": [2,1]
+      }</code></pre>
+      <strong>Example Output</strong>
+      <pre><code>{
+  "message": "Order created",
+  "order": [
+    20
+  ]
+      }</code></pre>
+  
+    </section>
+    <hr>
+
+    <section id="getorderbytoken" class="row">
+      <h4>Get All Token Holder's Orders</h4>
+      <p><span>Endpoint URL: </span><code>/api/orders/token/</code> <span>Method:
+        </span><code>GET</code></p>
+        <p>Will get all orders placed by logged in user</p>
+      <strong>Example Output</strong>
+      <pre><code>[
+{
+  "total": 103.15,
+  "name": "Denver Smi",
+  "origination_date": "2028-11-02",
+  "estimated_date": "2029-11-02",
+  "completion_date": null,
+  "progress": "New",
+  "order_id": 19,
+  "products": [
+    {
+      "id": 2,
+      "name": "some product 2",
+      "price": 2.05
+    },
+    {
+      "id": 3,
+      "name": "some product 3",
+      "price": 100.05
+    },
+    {
+      "id": 1,
+      "name": "some product",
+      "price": 1.05
+    }
+  ]
+},
+{
+  "total": 3.1,
+  "name": "Denver Smi",
+  "origination_date": "2028-11-02",
+  "estimated_date": "2029-11-02",
+  "completion_date": null,
+  "progress": "New",
+  "order_id": 20,
+  "products": [
+    {
+      "id": 2,
+      "name": "some product 2",
+      "price": 2.05
+    },
+    {
+      "id": 1,
+      "name": "some product",
+      "price": 1.05
+    }
+  ]
+}
+    ]</code></pre>
+
+    </section>
+    <hr>
+
+    <section id="getorderbyid" class="row">
+      <h4>Get Order by ID</h4>
+      <p><span>Endpoint URL: </span><code>/api/orders/:id</code> <span>Method:
+        </span><code>GET</code></p>
+      <strong>Example Output</strong>
+      <pre><code>{
+  "total": 103.15,
+  "name": "Denver Smi",
+  "origination_date": "2028-11-02",
+  "estimated_date": "2029-11-02",
+  "completion_date": null,
+  "progress": "New",
+  "order_id": 18
+}</code></pre>
+
+    </section>
+    <hr>
+
+    <section id="putorderbyid" class="row">
+      <h4>Put Order by ID</h4>
+      <p><span>Endpoint URL: </span><code>/api/orders/:id</code> <span>Method:
+        </span><code>PUT</code></p>
+      <strong>Expected Input</strong>
+      <pre><code>{
+  "estimated_date": "2019-11-02",
+  "completion_date": null,
+  "progress": "Complete"
+}</code></pre>
+
+      <strong>Example Output</strong>
+      <pre><code>1</code></pre>
+
+    </section>
+    <hr>
+
+    <section id="deleteorderbyid" class="row">
+      <h4>Delete Order by ID</h4>
+      <p><span>Endpoint URL: </span><code>/api/orders/:id</code> <span>Method:
+        </span><code>PUT</code></p>
+
+      <strong>Example Output</strong>
+      <pre><code>1</code></pre>
+
+    </section>
+    <hr>
+    
+    <section id="getallproducts" class="row">
+      <h4>Get All Products</h4>
+      <p><span>Endpoint URL: </span><code>/api/products/</code> <span>Method:
+        </span><code>GET</code></p>
+        <p>This route does not require any auth</p>
+      <strong>Example Output</strong>
+      <pre><code>[
+  {
+    "id": 1,
+    "name": "some product",
+    "description": "something longer than it needs to be",
+    "price": 1.05
+  },
+  {
+    "id": 2,
+    "name": "some product 2",
+    "description": "mope longer than it needs to be",
+    "price": 2.05
+  },
+  {
+    "id": 3,
+    "name": "some product 3",
+    "description": "yep longer than it needs to be",
+    "price": 100.05
+  }
+]</code></pre>
+
+    </section>
+    <hr>
+
+    <section id="postproducts" class="row">
+      <h4>Post Products</h4>
+      <p><span>Endpoint URL: </span><code>/api/products/</code> <span>Method:
+        </span><code>POST</code></p>
+        <p>This route require being logged in as admin</p>
+      <strong>Expected Input</strong>
+      <pre><code>{
+  "name": "some product 4",
+  "description": "maybe longer than it needs to be",
+  "price": 12.05
+}</code></pre>
+      <strong>Example Output</strong>
+      <pre><code>{
+  "productID": 5
+}</code></pre>
+
+    </section>
+    <hr>
+
+    <section id="getproductsbyid" class="row">
+      <h4>Get All Products</h4>
+      <p><span>Endpoint URL: </span><code>/api/products/:id/</code> <span>Method:
+        </span><code>GET</code></p>
+        <p>This route does not require any auth</p>
+      <strong>Example Output</strong>
+      <pre><code>{
+  "id": 1,
+  "name": "some product",
+  "description": "something longer than it needs to be",
+  "price": 1.05
+}</code></pre>
+
+    </section>
+    <hr>
+
+    <section id="putproductsbyid" class="row">
+      <h4>Put Products</h4>
+      <p><span>Endpoint URL: </span><code>/api/products/:id</code> <span>Method:
+        </span><code>PUT</code></p>
+        <p>This route require being logged in as admin</p>
+      <strong>Expected Input</strong>
+      <pre><code>{
+  "name": "some product 4",
+  "description": "maybe longer than it needs to be",
+  "price": 12.05
+}</code></pre>
+      <strong>Example Output</strong>
+      <pre><code>1</code></pre>
+
+    </section>
+    <hr>
+
+    <section id="deleteproductsbyid" class="row">
+      <h4>Delete Products</h4>
+      <p><span>Endpoint URL: </span><code>/api/products/:id</code> <span>Method:
+        </span><code>PUT</code></p>
+        <p>This route require being logged in as admin</p>
+      <strong>Example Output</strong>
+      <pre><code>1</code></pre>
+
+    </section>
+    <hr>
+
+    <section id="oauth" class="row">
+      <h4>OAuth Info</h4>
+      <p><span>Endpoint URL: </span><code>/customers/register</code> 
+      <p>You will need to have a clickable link to this url.  It will route to a google auth page.
+        The backend will then send a redirect back to the frontend with the token as a query.  You 
+        will need to parse the token out of the query and add it to local storage.
+      </p>
+      <strong>Example Token Parse</strong>
+      <pre><code>componentDidMount() {
+  const query = queryString.parse(this.props.location.search);
+  if (query.token) {
+    window.localStorage.setItem("jwt", query.token);
+    this.props.history.push("/");
+  }
+}</code></pre>
+      <p>This requires <code>queryString</code> and <code>react-router-dom</code>.
+        Backend will need to modified to point at the component containing the 
+        <code>componentDidMount()</code>
+      </p>
+
+    </section>
+    <hr>
+
 
   <footer style="background-color: #eee; padding-top: 30px; margin-top: 50px;">
     <div class="container">
