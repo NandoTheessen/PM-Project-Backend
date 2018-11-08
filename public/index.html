@@ -81,7 +81,6 @@
       <h4>Get User Data</h4>
       <p><span>Endpoint URL: </span><code>/api/customers/</code> <span>Method:
         </span><code>GET</code></p>
-      <p>To register a new user send a <code>POST</code> that looks as follows.</p>
       <strong>Example Output</strong>
       <pre><code>{
   "externalID": "101726162587457658790",
@@ -97,7 +96,44 @@
     </section>
     <hr>
 
+    <section id="putuser" class="row">
+      <h4>Update User profile by id</h4>
+      <p><span>Endpoint URL: </span><code>api/customers/:id</code> <span>Method:
+        </span><code>PUT</code></p>
+        <p>Only fields that are going to be updated need to be sent. Requires being
+          logged in as Admin
+        </p>
+        <p><span>Endpoint URL: </span><code>api/customers/</code> <span>Method:
+        </span><code>PUT</code></p>
+        <p>Will take user Id off token to update.  Does not require being admin</p>
+      <strong>Expected Input</strong>
+      <pre><code>{
+  "name": "William Smith",
+  "address": "668 Smith Ave, Fort Worth, TX 76107",
+  "phone": "817-939-1234"
+      }</code></pre>
+      <strong>Example Output</strong>
+      <pre><code>1</code></pre>
 
+    </section>
+    <hr>
+
+    <section id="addemail" class="row">
+      <h4>Add email to User</h4>
+      <p><span>Endpoint URL: </span><code>/customers/email/</code> <span>Method:
+        </span><code>PUT</code></p>
+      <strong>Expected Input</strong>
+      <p>Only fields that are going to be updated need to be sent</p>
+      <pre><code>{
+  "name": "William Smith",
+  "address": "668 Smith Ave, Fort Worth, TX 76107",
+  "phone": "817-939-1234"
+      }</code></pre>
+      <strong>Example Output</strong>
+      <pre><code>1</code></pre>
+
+    </section>
+    <hr>
 
   <footer style="background-color: #eee; padding-top: 30px; margin-top: 50px;">
     <div class="container">

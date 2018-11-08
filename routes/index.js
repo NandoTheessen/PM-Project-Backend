@@ -36,12 +36,15 @@ router
   .route('/customers/redirect')
   .get(auth.googleAuth('customers'), auth.googleRedirect);
 
-router.route('/customers/').get(tokenCheck, customers.getOneFromToken);
+router
+  .route('/customers/')
+  .get(tokenCheck, customers.getOneFromToken)
+  .put(tokenCheck, customers.putToken);
 
 router
   .route('/customers/:id')
   .get(tokenCheck, auth.isAdminCheck, customers.getOneFromId)
-  .put(tokenCheck, customers.put);
+  .put(tokenCheck, auth.isAdminCheck, customers.put);
 
 router.route('/customers/email/').post(tokenCheck, customers.postEmail);
 
