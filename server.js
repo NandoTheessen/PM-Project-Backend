@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const routes = require('./routes');
 const passport = require('passport');
 const morgan = require('morgan');
+path = require('path'),
 require('./auth/jwt')
 require('./auth/strategy')
 
@@ -21,6 +22,10 @@ server.use(passport.initialize());
 
 // Routes
 server.use('/api', routes);
+
+server.use(express.static(path.resolve(path.join(__dirname, 'public'))));
+server.get('*', (_, res) => res.sendFile('/index.html'));
+
 
 function errorHandler(err, req, res, next) {
     console.log("error handler", err);

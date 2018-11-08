@@ -38,6 +38,21 @@ const put = async function putSingleFromId(req, res, next) {
     }
 }
 
+const putToken = async function putSingleFromId(req, res, next) {
+    try {
+        // const { id } = req.params;
+        const id = req.user.externalID
+        console.log(id)
+        const { address, phone, name } = req.body;
+        const toUpdate = { address, phone, name }
+        const putReturn = await putUser(id, toUpdate);
+        res.status(status.ok).json(putReturn)
+    } catch(err) {
+        err['statusCode'] = 400;
+        next(err);
+    }
+}
+
 const postEmail = async function postNewEmail(req, res, next) {
     try {
         const { externalID } = req.user;
@@ -55,5 +70,6 @@ module.exports = {
     getOneFromToken,
     getOneFromId,
     put,
+    putToken,
     postEmail
 };

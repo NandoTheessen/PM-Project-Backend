@@ -50,7 +50,7 @@ const putOne = async function editSingleProduct(req, res, next) {
     try {
         const count = await putOneProd(id, name, description, price);
         if (count) {
-            res.status(status.noContent);
+            res.status(status.ok).json(count);
         }
         else {
             err = { statusCode: status.notFound }
@@ -69,7 +69,7 @@ const delOne = async function deleteSingleProduct(req, res, next) {
         const count = await delOneProd(id);
 
         if (count) {
-            res.status(status.noContent);
+            res.status(status.ok).json(count);
         }
         else {
             err = { statusCode: status.notFound }
