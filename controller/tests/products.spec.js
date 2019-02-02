@@ -12,7 +12,10 @@ db.mockImplementation((table) => {
 
 const {
   newProd,
-  getProds
+  getProds,
+  getOneProd,
+  putOneProd,
+  delOneProd
 } = require('../products');
 
 describe('Model - Products:', () => {
@@ -29,6 +32,11 @@ describe('Model - Products:', () => {
 
   });
 
+  afterEach(async () => {
+    await db('products').del()
+      .catch((err) => { throw err; });
+  });
+
   it('Tests are testing', () => {
     // Sanity testing. Can't test if tests don't test
     expect('abc').toBe('abc');
@@ -43,7 +51,7 @@ describe('Model - Products:', () => {
     expect(result).toEqual([]);
   });
 
-  it('Successfully inserts and retrieves record.', async () => {
+  it('Inserts and retrieves record successfully.', async () => {
     // --- Insert Record
     // Arrange
     const name = "Testing Product";
@@ -61,5 +69,112 @@ describe('Model - Products:', () => {
     expect(getResult).toEqual(
       expect.arrayContaining([expect.objectContaining({ name, description, price })])
     );
+  });
+
+  it('Retrieves one product record successfully.', async () => {
+    // Arrange
+    const records = [
+      {
+        name: 'Test1',
+        description: 'test',
+        price: 1
+      },
+      {
+        name: 'Test2',
+        description: 'tests',
+        price: 2
+      },
+      {
+        name: 'Test3',
+        description: 'testss',
+        price: 5
+      },
+    ];
+
+    // Act
+    let result1,
+        result2;
+    try {
+      for (const prod of records) {
+        const { name, description, price } = prod;
+        const [ id ] = await newProd(name, description, price);
+        prod.id = id;
+      }
+
+      result1 = await getOneProd(records[0].id);
+      result2 = await getOneProd(records[2].id);
+      result3 = await getOneProd(99);
+    } 
+    catch (err) {
+      throw err;
+    }
+    // Assert
+    expect(result1).toEqual([expect.objectContaining(records[0])]);  
+    expect(result2).toEqual([expect.objectContaining(records[2])]);
+    expect(result3).toEqual([]);
+  });
+
+  it('Updates a record successfully.', async () => {
+    // Arrange
+    const record = {
+      name: 'Test1',
+      description: 'test',
+      price: 1
+    };
+    // Act
+    let result,
+        count;
+    try {
+      const { name, description, price } = record;
+      const [ id ] = await newProd(name, description, price);
+      count = await putOneProd(id, name, description, 30);
+      result = await getOneProd(id);
+    }
+    catch (err) {
+      throw err;
+    }
+    // Asset
+    expect(count).toBe(1);
+    expect(result).not.toEqual(expect.arrayContaining([expect.objectContaining(record)]));
+    expect(result).toEqual(
+      expect.arrayContaining([ expect.objectContaining({ ...record, price: 30 }) ])
+      );
+  });
+
+  it('Deletes a record successfully.', async () => {
+    // Arrange
+    const records = [
+      {
+        name: 'Test1',
+        description: 'test',
+        price: 1
+      },
+      {
+        name: 'Test2',
+        description: 'tests',
+        price: 2
+      },
+    ];
+    // Act
+    let result,
+        count;
+    try {
+      for (const prod of records) {
+        const { name, description, price } = prod;
+        const [ id ] = await newProd(name, description, price);
+        prod.id = id;
+      }
+      count = await delOneProd(records[0].id);
+      result1 = await getOneProd(records[0].id);
+      result2 = await getOneProd(records[1].id);
+    }
+    catch (err) {
+      throw err;
+    }
+    // Asset
+    expect(count).toBe(1);
+    expect(result1).not.toEqual(expect.arrayContaining([expect.objectContaining(records[0])]));
+    expect(result1).toEqual([]);
+    expect(result2).toEqual(expect.arrayContaining([expect.objectContaining(records[1])]));
   });
 });

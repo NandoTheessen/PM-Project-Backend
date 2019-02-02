@@ -3,9 +3,7 @@ const { server } = require('./server');
 
 const { PORT } = process.env;
 
-server.get('/', (req, res) => {
-    res.send('api: running');
-})
+
 
 const port = PORT || 5000;
 
